@@ -1,0 +1,340 @@
+Last login: Mon Nov  1 09:16:54 on ttys003
+➜  ~ psql -U postgres
+Password for user postgres: 
+psql (14.0)
+Type "help" for help.
+
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ cinema    | postgres | UTF8     | C       | C     | 
+ football  | postgres | UTF8     | C       | C     | 
+ jordan    | postgres | UTF8     | C       | C     | 
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(6 rows)
+
+postgres=# \c football
+You are now connected to database "football" as user "postgres".
+football=# SELECT * FROM football;
+ERROR:  relation "football" does not exist
+LINE 1: SELECT * FROM football;
+                      ^
+football=# \dt
+           List of relations
+ Schema |   Name    | Type  |  Owner   
+--------+-----------+-------+----------
+ public | divisions | table | postgres
+ public | matches   | table | postgres
+(2 rows)
+
+football=# SELECT * FROM divisions;
+ id | code |         name          |   country   
+----+------+-----------------------+-------------
+  1 | B1   | Division 1A           | Belgium
+  2 | D1   | Bundesliga            | Deutschland
+  3 | D2   | 2. Bundesliga         | Deutschland
+  4 | E0   | Premier League        | England
+  5 | E1   | EFL Championship      | England
+  6 | E2   | EFL League One        | England
+  7 | E3   | EFL League Two        | England
+  8 | EC   | National League       | England
+  9 | F1   | Ligue 1               | France
+ 10 | F2   | Ligue 2               | France
+ 11 | G1   | Superleague           | Greece
+ 12 | I1   | Seria A               | Italy
+ 13 | I2   | Seria B               | Italy
+ 14 | N1   | Eredivisie            | Netherlands
+ 15 | P1   | Liga NOS              | Portugal
+ 16 | SC0  | Scottish Premiership  | Scotland
+ 17 | SC1  | Scottish Championship | Scotland
+ 18 | SC2  | Scottish League One   | Scotland
+ 19 | SP1  | LaLiga                | Spain
+ 20 | SP2  | LaLiga 2              | Spain
+ 21 | T1   | Süper Lig             | Turkey
+(21 rows)
+
+football=# SELECT * FROM matches;
+football=# SELECT * FROM matches WHERE season = 2017;
+football=# SELECT * FROM matches WHERE (hometeam, awayteam) = ('Barcelona', 'Barcelona');
+ id | division_code | hometeam | awayteam | fthg | ftag | ftr | season 
+----+---------------+----------+----------+------+------+-----+--------
+(0 rows)
+
+football=# SELECT * FROM matches WHERE hometeam = 'Barcelona';
+football=# SELECT * FROM matches WHERE awayteam = 'Barcelona';
+football=# SELECT * FROM matches WHERE (hometeam, awayteam) = ('Barcelona');
+ERROR:  input of anonymous composite types is not implemented
+LINE 1: ...LECT * FROM matches WHERE (hometeam, awayteam) = ('Barcelona...
+                                                             ^
+football=# SELECT * FROM divisions  WHERE name LIKE '%Scottish%';
+ id | code |         name          | country  
+----+------+-----------------------+----------
+ 16 | SC0  | Scottish Premiership  | Scotland
+ 17 | SC1  | Scottish Championship | Scotland
+ 18 | SC2  | Scottish League One   | Scotland
+(3 rows)
+
+football=# SELECT * FROM divisions  WHERE name = 'Scottish';
+ id | code | name | country 
+----+------+------+---------
+(0 rows)
+
+football=# SELECT * FROM divisions  WHERE name = 'Scottish%';
+ id | code | name | country 
+----+------+------+---------
+(0 rows)
+
+football=# SELECT * FROM divisions  WHERE name = '%Scottish%';
+ id | code | name | country 
+----+------+------+---------
+(0 rows)
+
+football=# SELECT * FROM divisions WHERE name = 'Bundesliga';
+ id | code |    name    |   country   
+----+------+------------+-------------
+  2 | D1   | Bundesliga | Deutschland
+(1 row)
+
+football=# SELECT * FROM matches WHERE (division_code, hometeam) = ('D1', 'Freiburg);
+football'# ';
+football(# );
+ERROR:  syntax error at or near ";"
+LINE 2: ';
+         ^
+football=# SELECT * FROM matches WHERE (division_code, hometeam) = ('D1', 'Freiburg');
+football=# SELECT * FROM matches WHERE (division_code, awayteam) = ('D1', 'Freiburg');
+football=# SELECT COUNT(*) FROM matches WHERE (division_code, hometeam) = ('D1', 'Freib
+urg');
+ count 
+-------
+   187
+(1 row)
+
+football=# SELECT COUNT(*) FROM matches WHERE (division_code, awayteam) = ('D1', 'Freiburg');
+ count 
+-------
+   187
+(1 row)
+
+football=# select * from matches WHERE hometeam LIKE '%Freiburg%' or awayteam LIKE '%Freiburg%';
+football=# select COUNT(*) from matches WHERE hometeam LIKE '%Freiburg%' or awayteam LI
+KE '%Freiburg%';
+ count 
+-------
+   544
+(1 row)
+
+football=# select COUNT(*) from matches WHERE hometeam = '%Freiburg%' or awayteam = '%Freiburg%';
+ count 
+-------
+     0
+(1 row)
+
+football=# select COUNT(*) from matches WHERE hometeam = 'Freiburg' or awayteam = 'Freiburg';
+ count 
+-------
+   544
+(1 row)
+
+football=# select COUNT(*) from matches WHERE division_code = 'D1' AND (hometeam = 'Fre
+iburg' or awayteam = 'Freiburg');
+ count 
+-------
+   374
+(1 row)
+
+football=# SELECT * FROM matches WHERE hometeam LIKE '%City%' OR awayteam LIKE '%City'; 
+football=# SELECT * FROM matches WHERE hometeam LIKE '%City%';
+football=# SELECT * FROM divisions;
+ id | code |         name          |   country   
+----+------+-----------------------+-------------
+  1 | B1   | Division 1A           | Belgium
+  2 | D1   | Bundesliga            | Deutschland
+  3 | D2   | 2. Bundesliga         | Deutschland
+  4 | E0   | Premier League        | England
+  5 | E1   | EFL Championship      | England
+  6 | E2   | EFL League One        | England
+  7 | E3   | EFL League Two        | England
+  8 | EC   | National League       | England
+  9 | F1   | Ligue 1               | France
+ 10 | F2   | Ligue 2               | France
+ 11 | G1   | Superleague           | Greece
+ 12 | I1   | Seria A               | Italy
+ 13 | I2   | Seria B               | Italy
+ 14 | N1   | Eredivisie            | Netherlands
+ 15 | P1   | Liga NOS              | Portugal
+ 16 | SC0  | Scottish Premiership  | Scotland
+ 17 | SC1  | Scottish Championship | Scotland
+ 18 | SC2  | Scottish League One   | Scotland
+ 19 | SP1  | LaLiga                | Spain
+ 20 | SP2  | LaLiga 2              | Spain
+ 21 | T1   | Süper Lig             | Turkey
+(21 rows)
+
+football=# SELECT * FROM divisions WHERE country = 'France';
+ id | code |  name   | country 
+----+------+---------+---------
+  9 | F1   | Ligue 1 | France
+ 10 | F2   | Ligue 2 | France
+(2 rows)
+
+football=# SELECT DISTINCT COUNT(hometeam, awayteam) WHERE division_code = 'F1' OR division_code = 'F2';
+ERROR:  column "hometeam" does not exist
+LINE 1: SELECT DISTINCT COUNT(hometeam, awayteam) WHERE division_cod...
+                              ^
+football=# SELECT DISTINCT COUNT(hometeam, awayteam) FROM matches WHERE division_code =
+ 'F1' OR division_code = 'F2';
+ERROR:  function count(character varying, character varying) does not exist
+LINE 1: SELECT DISTINCT COUNT(hometeam, awayteam) FROM matches WHERE...
+                        ^
+HINT:  No function matches the given name and argument types. You might need to add explicit type casts.
+football=# SELECT * WHERE division_code = 'F1' OR division_code = 'F2';
+ERROR:  SELECT * with no tables specified is not valid
+LINE 1: SELECT * WHERE division_code = 'F1' OR division_code = 'F2';
+               ^
+football=# SELECT * FROM matches WHERE division_code = 'F1' OR division_code = 'F2';
+football=# SELECT * FROM matches GROUP BY division_code = 'F1' OR division_code = 'F2'; 
+ERROR:  column "matches.id" must appear in the GROUP BY clause or be used in an aggregate function
+LINE 1: SELECT * FROM matches GROUP BY division_code = 'F1' OR divis...
+               ^
+football=# SELECT COUNT(*) FROM matches GROUP BY division_code = 'F1' OR division_code = 'F2';
+ count  
+--------
+ 111445
+  11959
+(2 rows)
+
+football=# SELECT DISTINCT(hometeam, awayteam) COUNT(*) FROM matches GROUP BY division_code = 'F1' OR division_code = 'F2';
+ERROR:  syntax error at or near "("
+LINE 1: SELECT DISTINCT(hometeam, awayteam) COUNT(*) FROM matches GR...
+                                                 ^
+football=# SELECT COUNT(*) DISTINCT(hometeam, awayteam) FROM matches WHERE division_code = 'F1' OR division_code = 'F2';
+ERROR:  syntax error at or near "("
+LINE 1: SELECT COUNT(*) DISTINCT(hometeam, awayteam) FROM matches WH...
+                                ^
+football=# SELECT COUNT(hometeam) FROM matches WHERE division_code = 'F1' OR division_code = 'F2';
+ count 
+-------
+ 11959
+(1 row)
+
+football=#  SELECT * FROM matches WHERE (hometeam, awayteam) = ('Huddersfield', 'Swansea') or (hometea, awayteam) = ('Swansea', 'Huddersfield');
+ERROR:  column "hometea" does not exist
+LINE 1: ...team, awayteam) = ('Huddersfield', 'Swansea') or (hometea, a...
+                                                             ^
+HINT:  Perhaps you meant to reference the column "matches.hometeam".
+football=#  SELECT * FROM matches WHERE (hometeam, awayteam) = ('Huddersfield', 'Swansea') or (hometeam, awayteam) = ('Swansea', 'Huddersfield');
+   id   | division_code |   hometeam   |   awayteam   | fthg | ftag | ftr | season 
+--------+---------------+--------------+--------------+------+------+-----+--------
+   1356 | E1            | Swansea      | Huddersfield |    1 |    2 | A   |   2021
+   1657 | E1            | Huddersfield | Swansea      |    4 |    1 | H   |   2021
+   9044 | E1            | Huddersfield | Swansea      |    1 |    1 | D   |   2020
+   9245 | E1            | Swansea      | Huddersfield |    3 |    1 | H   |   2020
+  23134 | E0            | Swansea      | Huddersfield |    2 |    0 | H   |   2018
+  23352 | E0            | Huddersfield | Swansea      |    0 |    0 | D   |   2018
+ 102027 | E2            | Swansea      | Huddersfield |    0 |    1 | A   |   2008
+ 102248 | E2            | Huddersfield | Swansea      |    0 |    1 | A   |   2008
+ 109776 | E2            | Swansea      | Huddersfield |    1 |    2 | A   |   2007
+ 109952 | E2            | Huddersfield | Swansea      |    3 |    2 | H   |   2007
+ 117499 | E2            | Huddersfield | Swansea      |    3 |    1 | H   |   2006
+ 117869 | E2            | Swansea      | Huddersfield |    2 |    2 | D   |   2006
+(12 rows)
+
+football=#  SELECT COUNT(*) FROM matches WHERE (hometeam, awayteam) = ('Huddersfield', 'Swansea') or (hometeam, awayteam) = ('Swansea', 'Huddersfield');
+ count 
+-------
+    12
+(1 row)
+
+football=# SELECT COUNT(DISTINCT hometeam) From matches WHERE division_code = 'F1' OR division_code = 'F2' GROUP BY division_code;
+ count 
+-------
+    39
+    53
+(2 rows)
+
+football=# SELECT COUNT(*) FROM matches WHERE fthg = ftag;
+ count 
+-------
+ 32794
+(1 row)
+
+football=# SELECT * FROM matches WHERE fthg = ftag;
+football=# SELECT COUNT(DISTINCT hometeam) From matches WHERE division_code = 'F1' OR division_code = 'F2';
+ count 
+-------
+    61
+(1 row)
+
+football=# SELECT * FROM divisions;
+ id | code |         name          |   country   
+----+------+-----------------------+-------------
+  1 | B1   | Division 1A           | Belgium
+  2 | D1   | Bundesliga            | Deutschland
+  3 | D2   | 2. Bundesliga         | Deutschland
+  4 | E0   | Premier League        | England
+  5 | E1   | EFL Championship      | England
+  6 | E2   | EFL League One        | England
+  7 | E3   | EFL League Two        | England
+  8 | EC   | National League       | England
+  9 | F1   | Ligue 1               | France
+ 10 | F2   | Ligue 2               | France
+ 11 | G1   | Superleague           | Greece
+ 12 | I1   | Seria A               | Italy
+ 13 | I2   | Seria B               | Italy
+ 14 | N1   | Eredivisie            | Netherlands
+ 15 | P1   | Liga NOS              | Portugal
+ 16 | SC0  | Scottish Premiership  | Scotland
+ 17 | SC1  | Scottish Championship | Scotland
+ 18 | SC2  | Scottish League One   | Scotland
+ 19 | SP1  | LaLiga                | Spain
+ 20 | SP2  | LaLiga 2              | Spain
+ 21 | T1   | Süper Lig             | Turkey
+(21 rows)
+
+football=# SELECT * FROM matches WHERE division_code = 'E0';
+football=# SELECT * FROM matches WHERE division_code = 'E0' ORDER BY fthg + ftag; 
+football=# SELECT * FROM matches WHERE division_code = 'E0' ORDER BY fthg + ftag DESC;
+football=# SELECT COUNT(division_code = 'N1') FROM matches WHERE fthg = ftag;
+ count 
+-------
+ 32794
+(1 row)
+
+football=# SELECT COUNT(*) FROM matches WHERE fthg = ftag AND division_code = 'N1';
+ count 
+-------
+  1114
+(1 row)
+
+football=# SELECT division_code FROM divisions WHERE country = 'France';
+ERROR:  column "division_code" does not exist
+LINE 1: SELECT division_code FROM divisions WHERE country = 'France'...
+               ^
+football=# SELECT code FROM divisions WHERE country = 'France';
+ code 
+------
+ F1
+ F2
+(2 rows)
+
+football=# SELECT COUNT(*) FROM matches WHERE ftr = 'D' AND division_code = 'N1' AND season BETWEEN 2010 AND 2015;
+ count 
+-------
+   431
+(1 row)
+
+football=# SELECT division_code, season, SUM(fthg), SUM(ftag) FROM matches GROUP BY division_code, season ORDER BY SUM(fthg + ftag) DESC;
+football=# SELECT name FROM divisions WHERE code = 'EC';
+      name       
+-----------------
+ National League
+(1 row)
+
+football=# SELECT division_code, season, SUM(fthg + ftag) FROM matches GROUP BY division_code, season ORDER BY SUM DESC;
+football=# 

@@ -1,0 +1,327 @@
+Last login: Mon Nov  1 09:10:20 on ttys000
+➜  ~ psql -U postgres
+Password for user postgres: 
+psql (14.0)
+Type "help" for help.
+
+postgres=# \quit
+➜  ~ psql -U jordan
+Password for user jordan: 
+psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: FATAL:  password authentication failed for user "jordan"
+➜  ~ psql -U jordan
+Password for user jordan: 
+psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: FATAL:  password authentication failed for user "jordan"
+➜  ~ psql -U jordan
+Password for user jordan: 
+psql: error: connection to server on socket "/tmp/.s.PGSQL.5432" failed: FATAL:  password authentication failed for user "jordan"
+➜  ~ \quit
+zsh: command not found: quit
+➜  ~ who am i
+jordan   ttys003  Nov  1 09:16 
+➜  ~ psql -U postgres
+Password for user postgres: 
+psql (14.0)
+Type "help" for help.
+
+postgres=# CREATE DATABASE cinema;
+CREATE DATABASE
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ cinema    | postgres | UTF8     | C       | C     | 
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(4 rows)
+
+postgres=# \c cinema
+You are now connected to database "cinema" as user "postgres".
+CREATE TABLEATE TABLE movies (id SERIAL, title VARCHAR(255), duration INT, rating VARCHAR(255));
+cinema=# DROP TABLE movies;
+DROP TABLE
+cinema=# CREATE TABLE movies (
+cinema(#     id SERIAL,
+cinema(#     title VARCHAR(255),
+cinema(#     duration INT,
+cinema(#     rating VARCHAR(255)
+cinema(# ;
+cinema(# DROP TABLE MOVIES
+cinema(# DROP TABLE movies;
+cinema(# \dt
+Did not find any relations.
+cinema(# CREATE TABLE movies (id SERIAL, title VARCHAR(255), duration INT, rating VARCHAR(255));
+cinema(# \dt
+Did not find any relations.
+cinema(# DROP DATABASE cinema;
+cinema(# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ cinema    | postgres | UTF8     | C       | C     | 
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(4 rows)
+
+cinema(# MAKE TABLE movies (id SERIAL, title VARCHAR(255), duration INT, rating VARCHAR(255));
+cinema(# \dt
+Did not find any relations.
+cinema(# \c
+You are now connected to database "cinema" as user "postgres".
+cinema(# \dt
+Did not find any relations.
+cinema(# MAKE TABLE movies (id SERIAL, title VARCHAR(255), duration INT, rating VARCHAR(255));
+cinema(# \dt
+Did not find any relations.
+cinema(# \q
+➜  ~ psql -U postgres
+Password for user postgres: 
+psql (14.0)
+Type "help" for help.
+
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ cinema    | postgres | UTF8     | C       | C     | 
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(4 rows)
+
+postgres=# DROP DATABASE cinema;
+DROP DATABASE
+postgres=# \l
+                             List of databases
+   Name    |  Owner   | Encoding | Collate | Ctype |   Access privileges   
+-----------+----------+----------+---------+-------+-----------------------
+ postgres  | postgres | UTF8     | C       | C     | 
+ template0 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+ template1 | postgres | UTF8     | C       | C     | =c/postgres          +
+           |          |          |         |       | postgres=CTc/postgres
+(3 rows)
+
+postgres=# CREATE DATABASE cinema;
+CREATE DATABASE
+postgres=# \c cinema
+You are now connected to database "cinema" as user "postgres".
+cinema=# CREATE TABLE (id SERIAL, title VARCHAR(255), duration INT, rating VARCHAR(255));
+ERROR:  syntax error at or near "("
+LINE 1: CREATE TABLE (id SERIAL, title VARCHAR(255), duration INT, r...
+                     ^
+cinema=# CREATE TABLE movies (id SERIAL, title VARCHAR(255), duration INT, rating VARCHAR(255));
+CREATE TABLE
+cinema=# \dt
+         List of relations
+ Schema |  Name  | Type  |  Owner   
+--------+--------+-------+----------
+ public | movies | table | postgres
+(1 row)
+
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('Alien', 117, '18');
+INSERT 0 1
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('The Imitation Game', 114, '12A');
+INSERT 0 1
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('Iron Man', 126, '12A');
+INSERT 0 1
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('The Martian', 144, '12A');
+INSERT 0 1
+cinema=# SELECT * FROM movies;
+ id |       title        | duration | rating 
+----+--------------------+----------+--------
+  1 | Alien              |      117 | 18
+  2 | The Imitation Game |      114 | 12A
+  3 | Iron Man           |      126 | 12A
+  4 | The Martian        |      144 | 12A
+(4 rows)
+
+cinema=# SELECT title, duration FROM movies;
+       title        | duration 
+--------------------+----------
+ Alien              |      117
+ The Imitation Game |      114
+ Iron Man           |      126
+ The Martian        |      144
+(4 rows)
+
+cinema=# SELECT * FROM movies WHERE rating = '12A';
+ id |       title        | duration | rating 
+----+--------------------+----------+--------
+  2 | The Imitation Game |      114 | 12A
+  3 | Iron Man           |      126 | 12A
+  4 | The Martian        |      144 | 12A
+(3 rows)
+
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('Pride & Prejudice', 127, 'U');
+INSERT 0 1
+cinema=# SELECT * FROM movies;
+ id |       title        | duration | rating 
+----+--------------------+----------+--------
+  1 | Alien              |      117 | 18
+  2 | The Imitation Game |      114 | 12A
+  3 | Iron Man           |      126 | 12A
+  4 | The Martian        |      144 | 12A
+  5 | Pride & Prejudice  |      127 | U
+(5 rows)
+
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('Guardians of the Galaxy', 121, '12A'); 
+INSERT 0 1
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('You Only Live Twice', 117, 'PG'); 
+INSERT 0 1
+cinema=# INSERT INTO movies (title, duration, rating) VALUES ('I Know What You Did Last Summer', 101, '18');
+INSERT 0 1
+cinema=# SELECT * FROM movies;
+ id |              title              | duration | rating 
+----+---------------------------------+----------+--------
+  1 | Alien                           |      117 | 18
+  2 | The Imitation Game              |      114 | 12A
+  3 | Iron Man                        |      126 | 12A
+  4 | The Martian                     |      144 | 12A
+  5 | Pride & Prejudice               |      127 | U
+  6 | Guardians of the Galaxy         |      121 | 12A
+  7 | You Only Live Twice             |      117 | PG
+  8 | I Know What You Did Last Summer |      101 | 18
+(8 rows)
+
+cinema=# SELECT * FROM movies WHERE duration > 120;
+ id |          title          | duration | rating 
+----+-------------------------+----------+--------
+  3 | Iron Man                |      126 | 12A
+  4 | The Martian             |      144 | 12A
+  5 | Pride & Prejudice       |      127 | U
+  6 | Guardians of the Galaxy |      121 | 12A
+(4 rows)
+
+cinema=# SELECT * FROM movies WHERE title LIKE 'pride';
+ id | title | duration | rating 
+----+-------+----------+--------
+(0 rows)
+
+cinema=# SELECT * FROM movies WHERE title LIKE 'pride%';
+ id | title | duration | rating 
+----+-------+----------+--------
+(0 rows)
+
+cinema=# SELECT * FROM movies WHERE title LIKE '%pride%';
+ id | title | duration | rating 
+----+-------+----------+--------
+(0 rows)
+
+cinema=# SELECT * FROM movies WHERE title LIKE 'Pride%';
+ id |       title       | duration | rating 
+----+-------------------+----------+--------
+  5 | Pride & Prejudice |      127 | U
+(1 row)
+
+cinema=# SELECT * FROM movies WHERE title LIKE '%of%';
+ id |          title          | duration | rating 
+----+-------------------------+----------+--------
+  6 | Guardians of the Galaxy |      121 | 12A
+(1 row)
+
+cinema=# SELECT * FROM movies WHERE LOWER(title) LIKE LOWER('%pride%');
+ id |       title       | duration | rating 
+----+-------------------+----------+--------
+  5 | Pride & Prejudice |      127 | U
+(1 row)
+
+cinema=# SELECT * FROM movies ORDER BY duration;
+ id |              title              | duration | rating 
+----+---------------------------------+----------+--------
+  8 | I Know What You Did Last Summer |      101 | 18
+  2 | The Imitation Game              |      114 | 12A
+  1 | Alien                           |      117 | 18
+  7 | You Only Live Twice             |      117 | PG
+  6 | Guardians of the Galaxy         |      121 | 12A
+  3 | Iron Man                        |      126 | 12A
+  5 | Pride & Prejudice               |      127 | U
+  4 | The Martian                     |      144 | 12A
+(8 rows)
+
+cinema=# SELECT * FROM movies WHERE rating = '12A' ORDER BY duration DESC;
+ id |          title          | duration | rating 
+----+-------------------------+----------+--------
+  4 | The Martian             |      144 | 12A
+  3 | Iron Man                |      126 | 12A
+  6 | Guardians of the Galaxy |      121 | 12A
+  2 | The Imitation Game      |      114 | 12A
+(4 rows)
+
+cinema=# SELECT * FROM movies ORDER BY title DESC;
+ id |              title              | duration | rating 
+----+---------------------------------+----------+--------
+  7 | You Only Live Twice             |      117 | PG
+  4 | The Martian                     |      144 | 12A
+  2 | The Imitation Game              |      114 | 12A
+  5 | Pride & Prejudice               |      127 | U
+  3 | Iron Man                        |      126 | 12A
+  8 | I Know What You Did Last Summer |      101 | 18
+  6 | Guardians of the Galaxy         |      121 | 12A
+  1 | Alien                           |      117 | 18
+(8 rows)
+
+cinema=# SELECT * FROM movies ORDER BY title;
+ id |              title              | duration | rating 
+----+---------------------------------+----------+--------
+  1 | Alien                           |      117 | 18
+  6 | Guardians of the Galaxy         |      121 | 12A
+  8 | I Know What You Did Last Summer |      101 | 18
+  3 | Iron Man                        |      126 | 12A
+  5 | Pride & Prejudice               |      127 | U
+  2 | The Imitation Game              |      114 | 12A
+  4 | The Martian                     |      144 | 12A
+  7 | You Only Live Twice             |      117 | PG
+(8 rows)
+
+cinema=# SELECT COUNT(*) FROM movies; 
+ count 
+-------
+     8
+(1 row)
+
+cinema=# SELECT * FROM movies;
+ id |              title              | duration | rating 
+----+---------------------------------+----------+--------
+  1 | Alien                           |      117 | 18
+  2 | The Imitation Game              |      114 | 12A
+  3 | Iron Man                        |      126 | 12A
+  4 | The Martian                     |      144 | 12A
+  5 | Pride & Prejudice               |      127 | U
+  6 | Guardians of the Galaxy         |      121 | 12A
+  7 | You Only Live Twice             |      117 | PG
+  8 | I Know What You Did Last Summer |      101 | 18
+(8 rows)
+
+cinema=# SELECT rating, COUNT(*) FROM movies GROUP BY rating;
+ rating | count 
+--------+-------
+ 12A    |     4
+ 18     |     2
+ PG     |     1
+ U      |     1
+(4 rows)
+
+cinema=# SELECT * FROM movies WHERE LENGTH(title) > 100;
+ id | title | duration | rating 
+----+-------+----------+--------
+(0 rows)
+
+cinema=# SELECT * FROM movies WHERE LENGTH(title) > 15;
+ id |              title              | duration | rating 
+----+---------------------------------+----------+--------
+  2 | The Imitation Game              |      114 | 12A
+  5 | Pride & Prejudice               |      127 | U
+  6 | Guardians of the Galaxy         |      121 | 12A
+  7 | You Only Live Twice             |      117 | PG
+  8 | I Know What You Did Last Summer |      101 | 18
+(5 rows)
+
+cinema=# 
